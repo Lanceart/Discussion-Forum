@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name = "viewpoint" content = "width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+
+<body>
+
+<!-- navigator-->
+<nav class = "ui inverted attached segment m-padded-tb-mini" >
+  <div class = "ui container">
+    <div class = " ui inverted stackable menu">
+      <h2 class = "ui teal header item"> Blog </h2>
+      <a href = "#" class = "m-item item m-mobile-hide"><i class = "home icon"></i>Home</a>
+      <a href = "#" class = "m-item item m-mobile-hide"><i class = "idea icon"></i>Category</a>
+      <a href = "#" class = "m-item item m-mobile-hide"><i class = "tags icon"></i>Label</a>
+      <a href = "#" class = "m-item item m-mobile-hide"><i class = "clone icon"></i>archive</a>
+      <a href = "#" class = "m-item item m-mobile-hide"><i class = "info icon"></i>Resume</a>
+      <div class = "right m-item item m-mobile-hide">
+        <div class = "ui icon input">
+          <input type = "text" placeholder="Search...">
+          <i class = "search icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+
+<div class = "m-padded-tb-large">
+  <div class="ui container">
+
+      <div class="top attached ui segment">
+        <div class="ui  horizontal link list">
+          <div class="item">
+            <img src="https://picsum.photos/id/65/100/100" th:src="@{${blog.user.avatar}}" alt="" class="ui avatar image">
+            <div class="content">
+              <div class="ui header">
+                <a href="#" class="header" th:text="${blog.user.nickname}">Lucy</a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2022.12.10</span>
+          </div>
+          <div class="item">
+            <i class="eye icon"></i><span th:text="${blog.views}">123</span>
+          </div>
+        </div>
+      </div>
+      <div class="ui attached segment">
+<!--    picture    -->
+        <img src="https://picsum.photos/id/17/800/450" th:src="@{${blog.firstPicture}}" alt="" class="ui fluid rounded image">
+      </div>
+      <div class="ui  attached message">
+<!--content-->
+        <div class="ui right aligned basic segment">
+          <div class="ui orange label">
+            original
+          </div>
+        </div>
+          <h2 class="ui center aligned header" th:text="${blog.title}">
+            Something about the idea changed
+          </h2>
+
+          <div id="content" class="m-padded-lr-responsive m-padded-tb-large" th:utext="${blog.content}">
+            <p> In CSS, "fluid" usually refers to "fluid layout", also known as "liquid layout". It is a design approach for responsive web layout that allows web page content to adaptively resize and rearrange according to changes in the browser window size. Compared to fixed layout, fluid layout mainly uses relative units (such as percentages, ems, rems, etc.) to set the size and position of elements, rather than absolute units like pixels. This allows elements to resize and reposition themselves adaptively with changes in browser window size, achieving a responsive layout effect.
+
+            In fluid layout, the page is typically divided into multiple regions, with the width of each region defined using percentages to achieve a self-adaptive layout for the content. Additionally, CSS media query techniques can be used to set different style rules based on screen size or device type, adapting to different devices and browsers.
+
+            In summary, fluid layout is a practical design approach for responsive web layout that allows web pages to display the best visual effects on different devices and screen sizes.
+          </p>
+          </div>
+
+          <div class="m-padded-lr-responsive">
+            <div class="ui basic teal left pointing label" th:each="tag : ${blog.tag}" th:text="${tag.name}">Self-improve</div>
+          </div>
+
+<!--         赞赏-->
+          <div class="ui center aligned basic segment">
+           <button id = "LikeButton" class="ui orange basic circular button">Like</button>
+          </div>
+
+          <div class="ui LikeQ flowing popup transition hidden">
+          <div class="ui orange basic label">
+            <div class="ui images">
+              <div class="image">
+                <img src="../static/images/bear.jpg" alt="" class="ui rounded bordered image" style = "width: 120px">
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+      </div>
+      <div class="ui  attached positive  message">
+<!--blog info-->
+        <div class="ui middle aligned grid">
+          <div class="eleven wide column">
+            <ui class="list">
+              <li>Author: <span th:text="${blog.user.nickname}">Linqing Li</span></li>
+              <li>publish data: <span th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm')}">2022-10-02</span></li>
+
+            </ui>
+          </div>
+
+          <div class="five wide column">
+            <img src="../static/images/bear.jpg" alt="" cl ass="ui right float rounded bordered image" style = "width: 120px">
+          </div>
+        </div>
+      </div>
+
+      <div class="ui  bottom attached segment" th:if="${blog.commentable}">
+<!--        message-->
+          <div id = "comment-container" class="ui teal segment" >
+            <div th:fragment="commentList">
+            <div class="ui comments">
+              <h3 class="ui dividing header">Comments</h3>
+              <div class="comment" th:each="comment : ${comments}">
+                <a class="avatar">
+                  <img src="https://picsum.photos/id/177/100/100" th:src="@{${comment.avatar}}">
+                </a>
+                <div class="content">
+                  <a class="author" th:text="${comment.nickname}">Matt</a>
+                  <div class="metadata">
+                    <span class="date" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                  </div>
+                  <div class="text" th:text="${comment.content}">
+                    How artistic!
+                  </div>
+                  <div class="actions">
+                    <a class="reply" data-commentid = "1" data-commentnickname = "Lin" th:attr="data-commentid=${comment.id}, data-commentnickname=${comment.nickname}" onclick="reply(this)">Reply</a>
+                  </div>
+                </div>
+                <div class="comments" th:if="${#arrays.length(comment.replyComments)}">
+                  <div class="comment" th:each="reply : ${comment.replyComments}">
+                    <a class="avatar">
+                      <img src="https://picsum.photos/id/177/100/100" th:src="@{${reply.avatar}}">
+                    </a>
+                    <div class="content">
+                      <span class="author" th:text="${reply.nickname}">Matt</span>&nbsp;<span class="m-teal" th:text="|@ ${reply.parentComment.nickname}|" >@ Wood</span>
+                      <div class="metadata">
+                        <span class="date" th:text="${#dates.format(reply.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                      </div>
+                      <div class="text" th:text="${reply.content}">
+                        How artistic!
+                      </div>
+                      <div class="actions">
+                        <a class="reply" data-commentid = "1" data-commentnickname = "Lin" th:attr="data-commentid=${reply.id}, data-commentnickname=${reply.nickname}" onclick="reply(this)">Reply</a>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!--/*-->
+              <div class="comment">
+                <a class="avatar">
+                  <img src="https://picsum.photos/id/177/100/100">
+                </a>
+                <div class="content">
+                  <a class="author">Elliot Fu</a>
+                  <div class="metadata">
+                    <span class="date">Yesterday at 12:30AM</span>
+                  </div>
+                  <div class="text">
+                    <p>This has been very useful for my research. Thanks as well!</p>
+                  </div>
+                  <div class="actions">
+                    <a class="reply">Reply</a>
+                  </div>
+                </div>
+                <div class="comments">
+                  <div class="comment">
+                    <a class="avatar">
+                      <img src="https://picsum.photos/id/177/100/100">
+                    </a>
+                    <div class="content">
+                      <a class="author">Jenny Hess</a>
+                      <div class="metadata">
+                        <span class="date">Just now</span>
+                      </div>
+                      <div class="text">
+                        Elliot you are always so right :)
+                      </div>
+                      <div class="actions">
+                        <a class="reply">Reply</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="comment">
+                <a class="avatar">
+                  <img src="https://picsum.photos/id/177/100/100">
+                </a>
+                <div class="content">
+                  <a class="author">Joe Henderson</a>
+                  <div class="metadata">
+                    <span class="date">5 days ago</span>
+                  </div>
+                  <div class="text">
+                    Dude, this is awesome. Thanks so much
+                  </div>
+                  <div class="actions">
+                    <a class="reply">Reply</a>
+                  </div>
+                </div>
+              </div>
+              <!--*/-->
+
+
+            </div>
+            </div>
+
+          </div>
+
+          <div id = "comment-form" class="ui form">
+          <input type="text" name="blog.id" th:value="${blog.id}">
+          <input type="text" name="parentComment.id" value="-1">
+          <div class="field">
+            <textarea name="content"  placeholder="please input here ..."></textarea>
+          </div>
+
+          <div class="fields">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" name="nickname" placeholder="nickname">
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="mail icon"></i>
+                <input type="text" name="email" placeholder="email">
+              </div>
+            </div>
+
+            <div class="field">
+              <button id ="commentpost-btn" type="button" class="ui teal button"> <i class="edit icon"></i>Reply </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+</div>
+
+
+<footer class = "ui inverted vertical segment m-padded-tb-massive ">
+  <div class = "ui center aligned container">
+    <div class = "ui inverted divided stackable grid">
+      <div class = "three wide column">
+        <div class="ui inverted link list">
+          <div class="item">
+            <img src="../static/images/bear.jpg" class = "ui rounded image" alt="" style = "width: 110px">
+
+          </div>
+        </div>
+      </div>
+      <div class = "three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced m-opactity-mini"> The new lists</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item">User story</a>
+          <a href="#" class="item">User story</a>
+          <a href="#" class="item">User story</a>
+        </div>
+      </div>
+      <div class = "three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced m-opactity-mini"> The new lists</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item">User story</a>
+          <a href="#" class="item">User story</a>
+          <a href="#" class="item">User story</a>
+        </div>
+
+      </div>
+      <div class = "seven wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced m-opactity-mini">linkme</h4>
+        <p class = "m-text-thin m-text-spaced m-opactity-mini">This is my blog. A place to share.</p>
+      </div>
+    </div>
+    <div class="ui inverted section divider">
+      <p class = "m-text-thin m-text-spaced m-opactity-mini">Copyright Ⓒ 2022 - 2023 Designed by Linqing </p>
+    </div>
+  </div>
+
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+
+
+<script>
+  $('.menu.toggle').click(function (){
+    $('.m-item').toggleClass('m-mobile-hide');
+  });
+
+  $('#LikeButton').popup({
+    popup : $('.LikeQ.popup'),
+    on : 'click',
+    position: 'bottom center'
+          });
+  //评论表单验证
+  $('.ui.form').form({
+    fields: {
+      title: {
+        identifier: 'content',
+        rules: [{
+          type: 'empty',
+          prompt: '请输入评论内容'
+        }
+        ]
+      },
+      content: {
+        identifier: 'nickname',
+        rules: [{
+          type: 'empty',
+          prompt: '请输入你的大名'
+        }]
+      },
+      type: {
+        identifier: 'email',
+        rules: [{
+          type: 'email',
+          prompt: '请填写正确的邮箱地址'
+        }]
+      }
+    }
+  });
+
+  $('#commentpost-btn').click(function () {
+    var boo = $('.ui.form').form('validate form');
+    if (boo) {
+      console.log('success validate');
+      postData();
+    } else {
+      console.log('failed validate');
+    }
+
+  });
+
+
+  function postData() {
+    $("#comment-container").load("[[@{/comments}]]",{
+      "parentComment.id" : $("[name='parentComment.id']").val(),
+      "blog.id" : $("[name='blog.id']").val(),
+      "nickname": $("[name='nickname']").val(),
+      "email"   : $("[name='email']").val(),
+      "content" : $("[name='content']").val()
+    },function (responseTxt, statusTxt, xhr) {
+       // $(window).scrollTo($('#comment-container'),500);
+      clearContent();
+    });
+  }
+  function reply(obj) {
+    var commentId = $(obj).data('commentid');
+    var commentNickname = $(obj).data('commentnickname');
+    $("[name='content']").attr("placeholder", "@"+commentNickname).focus();
+    $("[name='parentComment.id']").val(commentId);
+    $(window).scrollTo($('#comment-form'),500);
+  }
+
+  function clearContent() {
+    $("[name='content']").val('');
+    $("[name='parentComment.id']").val(-1);
+    $("[name='content']").attr("placeholder", "please input the comment...");
+  }
+
+  $(function () {
+    $("#comment-container").load(/*[[@{/comments/{id}(id=${blog.id})}]]*/"/comments/7");
+  });
+</script>
+
+
+</body>
+</html>
